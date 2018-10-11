@@ -253,7 +253,7 @@ for (i in seq(1, length(unique_ranked$topology))){
     if (startsWith(all_labels[[2]][[j]],"mig&")){
       posterior = length(which(log.data[,all_labels[[2]][[j]]]>0))/length(log.data[,all_labels[[2]][[j]]])
       bayes = posterior*(1-prior)/((1-posterior)*prior)
-      if (bayes>5){
+      if (bayes>10){
         new.mig_rates <- data.frame(from = strsplit(all_labels[[2]][[j]], "&")[[1]][3], to = strsplit(all_labels[[2]][[j]], "&")[[1]][2], BF=bayes)
         if (nc==1){
           mig_rates = new.mig_rates
