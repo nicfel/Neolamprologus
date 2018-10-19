@@ -133,14 +133,17 @@ unique_ranked <- unique(tree_top)
 
 median_node_heights <- vector(, length(unique_ranked$topology))
 
-log <- vector(, length(est_species_tree_with_nodes))
+log <- vector(, length(unique_ranked$topology))
 
+# keeps track of the posterior support for tree
+bpp_support = rep(0, length(unique_ranked$topology))
 
 # for each of these trees, make an individual log file
 for (i in seq(1, length(unique_ranked$topology))){
   # get the row and change the row name to compare rows
   ur <- unique_ranked[i,]
   row.names(ur) <- 1
+  
   
   first = TRUE
   
@@ -180,6 +183,7 @@ for (i in seq(1, length(unique_ranked$topology))){
   median_node_heights[[i]] <- list(new.median_node_heights)
   
   log[i] <- list(log.data)
+  bpp_support[i] <- length(log.data$sample)
   
   
   fname1 <- gsub("\\.trees", paste("_", i, "tmp.log", sep=""), trees)
@@ -189,6 +193,12 @@ for (i in seq(1, length(unique_ranked$topology))){
 
   system(paste("/Applications/BEAST\\ 2.5.0/bin/logcombiner -renumber -burnin 0 -log", fname1, "-o", fname2, sep=" "))
   system(paste("rm -r ", fname1))
+}
+
+sum_sup = sum(bpp_support)
+bpp__proc_support = rep(0, length(unique_ranked$topology))
+for (i in seq(1,length(bpp_support))){
+  bpp__proc_support[i]= bpp_support[i]/sum_sup
 }
 
 
